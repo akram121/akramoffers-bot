@@ -1,34 +1,27 @@
 import os
-import time
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram import Bot
 
-# قراءة التوكن من Environment Variable
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-if not TOKEN:
-    raise RuntimeError("TELEGRAM_BOT_TOKEN is not set")
-
-# أمر /start
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "🤖 Akramoffers Bot is running!\n\n"
-        "سيصلك هنا أي تنبيه أو عرض مهم بإذن الله.\n\n"
-        "— Akramoffers_Bot"
-    )
-
-# أمر /status
-async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("✅ البوت يعمل بشكل طبيعي.")
+if not TOKEN or not CHAT_ID:
+    raise RuntimeError("Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID")
 
 def main():
-    app = ApplicationBuilder().token(TOKEN).build()
+    bot = Bot(token=TOKEN)
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("status", status))
+    message = (
+        "🔔 Akramoffers Bot\n\n"
+        "هذا تشغيل مجدول عبر GitHub Actions.\n"
+        "سيتم هنا لاحقاً إرسال:\n"
+        "- عروض ChatGPT / Gemini / Copilot\n"
+        "- عروض Canva\n"
+        "- عروض TradingView\n"
+        "- ملخص يومي الساعة 7 مساءً\n\n"
+        "✅ البوت يعمل بنجاح"
+    )
 
-    print("Bot is running...")
-    app.run_polling()
+    bot.send_message(chat_id=CHAT_ID, text=message)
 
 if __name__ == "__main__":
     main()
